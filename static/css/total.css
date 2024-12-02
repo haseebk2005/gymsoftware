@@ -1,0 +1,197 @@
+/* Reset */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background: linear-gradient(-45deg, #f0f4f9, #e8eff4, #dfe7ed, #f5fafd);
+    background-size: 300% 300%;
+    animation: gradientBackground 10s ease infinite;
+}
+
+@keyframes gradientBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Container and Title */
+.member-container {
+    width: 100%;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.member-title {
+    font-size: 2em;
+    color: #5b8a72;
+    margin-bottom: 15px;
+}
+
+/* Search and Status Filter */
+.filter-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+    margin-right: 15px;
+}
+
+#search-input {
+    padding: 8px;
+    border-radius: 5px 0 0 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    width: 250px;
+}
+
+.search-btn,
+.toggle-status-btn {
+    padding: 8px 15px;
+    background-color: #5a7a7f;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 5px;
+}
+
+.search-btn:hover,
+.toggle-status-btn:hover {
+    background-color: #789d9b;
+}
+
+/* Table */
+.member-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    overflow: hidden;
+    background-color: rgba(245, 245, 245, 0.9);
+}
+
+.member-table thead th {
+    background-color: rgba(91, 138, 114, 0.9);
+    color: #fff;
+    padding: 10px;
+}
+
+.member-table tbody td {
+    padding: 12px;
+    text-align: center;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    animation: slideInRow 0.5s ease-in-out;
+}
+
+.member-table tbody tr:nth-child(odd) {
+    background-color: rgba(245, 245, 245, 0.8);
+}
+
+.member-link {
+    color: #3b4a4f;
+    text-decoration: none;
+}
+
+.member-link:hover {
+    color: #6a7076;
+}
+
+/* Row Slide-in Animation */
+@keyframes slideInRow {
+    0% { opacity: 0; transform: translateX(-100px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+/* Buttons */
+.btn-action {
+    background-color: #789d9b;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-action:hover {
+    background-color: #5a7a7f;
+}
+
+.active {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Input for Payment */
+.input-amount {
+    width: 80px;
+    padding: 6px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Styling for Past Due */
+.member-table .past-due {
+    background-color: rgba(179, 89, 89, 0.441);
+    color: rgb(0, 0, 0);
+}
+
+/* Profile Picture Styling */
+.profile-picture-container {
+    text-align: center;
+}
+
+.profile-picture {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .member-container {
+        padding: 10px;
+    }
+
+    #search-input {
+        width: 100%;
+    }
+
+    .member-table thead th, .member-table tbody td {
+        font-size: 14px;
+    }
+
+    .toggle-status-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .filter-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-container {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}

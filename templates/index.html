@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+<main class="content">
+    <h1 class="main-title">Body Care Gym</h1>
+</main>
+
+<!-- Dashboard Content -->
+<main class="dashboard">
+    <!-- Stats Cards -->
+    <div class="stats-cards">
+        <div class="card card-slide-left">
+            <h3>Total Attendance Today</h3>
+            <p>{{ total_attendance_today }}</p>
+        </div>
+        <div class="card card-slide-up">
+            <h3>Total Active Members</h3>
+            <p>{{ total_active_members }}</p>
+        </div>
+    </div>
+
+    <!-- Attendance Graph -->
+    <div class="graph-container">
+        <h3>Attendance - Last 30 Days</h3>
+        <canvas id="attendanceChart"></canvas>
+    </div>
+</main>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {{ labels|safe }};
+    const data = {{ data|safe }};
+    
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    const attendanceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Daily Attendance',
+                data: data,
+                fill: false,
+                borderColor: '#5a7a7f',  // Softened green for a calming effect
+                backgroundColor: 'rgba(90, 122, 127, 0.2)', // Light fill for the area under the line
+                tension: 0.3,  // Slightly increased tension for smoother curves
+                pointBackgroundColor: '#ffffff', // White points for better visibility
+                pointRadius: 4, // Slightly larger points for clarity
+                borderWidth: 2 // Thicker border for a more prominent line
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date',
+                        color: '#5b8a72', // Color of the x-axis title to match the overall design
+                    },
+                    grid: {
+                        color: 'rgba(91, 138, 114, 0.5)' // Soft grid lines for a modern look
+                    },
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Attendance',
+                        color: '#5b8a72', // Matching color for y-axis title
+                    },
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(91, 138, 114, 0.5)' // Same as x-axis grid color for consistency
+                    },
+                    ticks: {
+                        color: '#333' // Ensures ticks are easy to read
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#333', // Matching color for legend text
+                    }
+                }
+            }
+        }
+    });
+    
+</script>
+{% endblock %}
+{% endblock %}

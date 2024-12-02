@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Management</title>
+    <link rel="stylesheet" href="{% static "css/base.css" %}">
+    <link rel="stylesheet" href="{% static "css/index.css" %}">
+    <link rel="stylesheet" href="{% static "css/total.css" %}">
+    <link rel="stylesheet" href="{% static "css/form.css" %}">
+    <link rel="stylesheet" href="{% static "css/fee.css" %}">
+    <script>
+        function toggleMembers() {
+            const currentStatus = document.getElementById('toggle-button').getAttribute('data-status');
+            const newStatus = currentStatus === "all" ? "active" : "all";  // Toggle between 'all' and 'active'
+            const url = newStatus === "all" ? window.location.href.split('?')[0] : window.location.href.split('?')[0] + '?active=true';
+            window.location.href = url;
+        }
+    </script>
+
+</head>
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="{% static "images/logo.png" %}" alt="Gym Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/totalmembers">Members</a></li>
+                <li><a href="{% url 'register_member' %}">Register new member</a></li>
+                <li><a href="{% url 'fee' %}">Fee</a></li>
+                <li><a href="/admin" target="_blank">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+    {% block main %}{% endblock  %}
+    <!-- Main Content -->
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Gym Management System. All rights reserved. | Powered by Abdul Haseeb Khan</p>
+    </footer>
+</body>
+</html>

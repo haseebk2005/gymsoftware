@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+<!-- Hidden Content Section -->
+<div id="content-section" style="display: none;">
+    <div class="custom-card custom-card-slide-left">
+        <h3>Collected Fee Information</h3>
+        <p>The total amount collected in fees is: <strong>${{ collected_fee }}</strong></p>
+        <p>This is the amount you've accumulated up until now. If you need to reset the fee, you can do so below.</p>
+    </div>
+
+    <!-- Button Container to center the button -->
+    <div class="custom-btn-container">
+        <a href="#" onclick="confirmReset()">
+            <button class="custom-deactivate-btn">Reset Fee</button>
+        </a>
+    </div>
+    
+</div>
+
+<!-- PIN Input Section -->
+<div id="pin-section">
+    <h3>Enter PIN to View Page</h3>
+    <input type="password" id="pin-input" placeholder="Enter PIN" />
+    <button id="pin-submit" class="custom-deactivate-btn">Submit</button>
+    <p id="pin-error" style="color: red; display: none;">Invalid PIN. Try again.</p>
+</div>
+<script>
+    function confirmReset() {
+        // Show a confirmation dialog to the user before resetting fees
+        const confirmAction = confirm("Are you sure you want to reset the fees for all members?");
+        if (confirmAction) {
+            // If confirmed, redirect to the 'fee_reset' view
+            window.location.href = "{% url 'fee_reset' %}";
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        const correctPin = "qwertyui"; // Replace with your desired PIN
+        const pinInput = document.getElementById("pin-input");
+        const pinSubmit = document.getElementById("pin-submit");
+        const pinError = document.getElementById("pin-error");
+        const contentSection = document.getElementById("content-section");
+        const pinSection = document.getElementById("pin-section");
+
+        pinSubmit.addEventListener("click", function () {
+            if (pinInput.value === correctPin) {
+                contentSection.style.display = "block"; // Show content
+                pinSection.style.display = "none"; // Hide PIN section
+            } else {
+                pinError.style.display = "block"; // Show error message
+            }
+        });
+    });
+</script>
+{% endblock %}

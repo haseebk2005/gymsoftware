@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ member.name }} - Gym Member Details</title>
+    <link href="{% static 'css/memberdetail.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="{% url 'member_list' %}" class="navbar-link">Back to Member List</a>
+    </nav>
+
+    <!-- Member Details Section -->
+    <div class="member-detail-section">
+        <div class="member-card">
+            <!-- Profile Picture -->
+            <div class="profile-picture-container">
+                <p><strong>Profile Picture:</strong></p>
+                {% if member.profile_picture %}
+                    <img src="{{ member.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+                {% else %}
+                    <p>No profile picture available</p>
+                {% endif %}
+            </div>
+        
+            <!-- Member Details -->
+            <div class="detail-block">
+                <h3>Personal Details</h3>
+                <p><strong>Name:</strong> {{ member.name }}</p>
+                <p><strong>Father Name:</strong> {{ member.fname }}</p>
+                <p><strong>Membership ID:</strong> {{ member.membership_id }}</p>
+                <p><strong>Phone Number:</strong> {{ member.phone_number }}</p>
+                <p><strong>Gender:</strong> {{ member.gender }}</p>
+                <p><strong>Address:</strong> {{ member.address }}</p>
+            </div>
+        
+            <div class="detail-block">
+                <h3>Membership Info</h3>
+                <p><strong>Joined Date:</strong> {{ member.joined_date }}</p>
+                <p><strong>Last Visit Date:</strong> {{ member.last_visit_date }}</p>
+                <p><strong>Membership Type:</strong> {{ member.membership_type }}</p>
+                <p><strong>Pending Fee:</strong> {{ pending_fee }}</p>
+                <p><strong>Attendance Today:</strong> {% if member.attendance_today %} Yes {% else %} No {% endif %}</p>
+            </div>
+        
+            <!-- Attendance Table -->
+            <div class="detail-block">
+                <h3>Last 30 Days Attendance</h3>
+                <table class="attendance-table">
+                    <tr>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                    {% for record in attendance_data %}
+                    <tr class="{% if not record.status %}absent-row{% endif %}">
+                        <td>{{ record.date }}</td>
+                        <td>{% if record.status %} Present {% else %} Absent {% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        
+            <!-- Deactivate Button -->
+            <div class="deactivate-container">
+                {% if member.active_status %}
+                    <form method="post" action="{% url 'deactivate_member' member.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="deactivate-btn">Deactivate Member</button>
+                    </form>
+                {% else %}
+                    <p>This member is inactive.</p>
+                {% endif %}
+            </div>
+            <a href="{% url 'print_receipt' member.id %}" class="print-receipt-btn">Print Receipt</a>
+        </div>
+    </div>
+</body>
+</html>

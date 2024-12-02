@@ -1,0 +1,127 @@
+/* Reset */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background: linear-gradient(-45deg, #f0f4f9, #e8eff4, #dfe7ed, #f5fafd);
+    background-size: 300% 300%;
+    animation: gradientBackground 10s ease infinite;
+}
+
+@keyframes gradientBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Container and Title */
+.register-member-container {
+    width: 100%;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.form-title {
+    font-size: 2em;
+    color: #5b8a72;
+    margin-bottom: 15px;
+}
+
+/* Form Layout */
+.register-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-field {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.form-field label {
+    font-size: 1em;
+    color: #5a7a7f;
+    margin-bottom: 5px;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    background-color: rgba(245, 245, 245, 0.9);
+    color: #333;
+}
+
+/* Submit Button */
+.submit-btn {
+    width: 100%;
+    max-width: 600px;
+    padding: 10px;
+    background-color: #5a7a7f;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #789d9b;
+}
+/* Camera Field Styling */
+#camera-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 15px;
+}
+
+#camera-container video,
+#camera-container canvas {
+    border: 2px solid #5a7a7f;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    display: none; /* Hidden by default; shown when used */
+}
+
+#openCameraBtn,
+#captureBtn {
+    padding: 8px 16px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #5a7a7f;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+#openCameraBtn:hover,
+#captureBtn:hover {
+    background-color: #789d9b;
+}

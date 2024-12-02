@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load static %}
+{% block main %}
+<div class="register-member-container">
+    <h2 class="form-title">Register New Gym Member</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="register-form">
+        {% csrf_token %}
+
+        <!-- Form Group for Each Field -->
+        <div class="form-field">
+            <label for="id_name">Name</label>
+            {{ form.name }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_name">Father Name</label>
+            {{ form.fname }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_phone_number">Phone Number</label>
+            {{ form.phone_number }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_activation_date">Activation Date</label>
+            {{ form.activation_date }}
+        </div>
+        
+        <div class="form-field">
+            <label for="id_date_of_birth">Date of Birth</label>
+            {{ form.date_of_birth }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_gender">Gender</label>
+            {{ form.gender }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_profile_picture">Profile Picture</label>
+            <div id="camera-container">
+                {{ form.profile_picture }}
+                <button type="button" id="openCameraBtn">Take Picture From Camera</button>
+                <video id="camera" width="320" height="240" autoplay style="display:none;"></video>
+                <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+                <button type="button" id="captureBtn" style="display:none;">Capture</button>
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label for="id_membership_id">Membership ID</label>
+            {{ form.membership_id }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_membership_type">Membership Type</label>
+            {{ form.membership_type }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_active_status">Active Status</label>
+            {{ form.active_status }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_weight">Weight (kg)</label>
+            {{ form.weight }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_height">Height (m)</label>
+            {{ form.height }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_fitness_goal">Fitness Goal</label>
+            {{ form.fitness_goal }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_address">Address</label>
+            {{ form.address }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_emergency_contact_relation">Emergency Contact Relation</label>
+            {{ form.emergency_contact_relation }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_last_visit_date">Last Visit Date</label>
+            {{ form.last_visit_date }}
+        </div>
+
+        <div class="form-field">
+            <label for="id_additional_notes">Additional Notes</label>
+            {{ form.additional_notes }}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn">Register Member</button>
+    </form>
+</div>
+<script>
+    // JavaScript to handle camera capture and upload
+    document.getElementById('openCameraBtn').addEventListener('click', function() {
+        const video = document.getElementById('camera');
+        const captureBtn = document.getElementById('captureBtn');
+
+        // Show video and capture button
+        video.style.display = 'block';
+        captureBtn.style.display = 'block';
+
+        // Get camera access
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => console.error("Camera access denied.", error));
+    });
+
+    document.getElementById('captureBtn').addEventListener('click', function() {
+        const video = document.getElementById('camera');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        
+        // Draw the current frame from the video to the canvas
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(blob => {
+            const file = new File([blob], "profile_picture.png", { type: "image/png" });
+            
+            // Update the file input with the captured image
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            document.getElementById("id_profile_picture").files = dataTransfer.files;
+        });
+
+        // Hide video and capture button, show the canvas with the captured photo
+        video.style.display = 'none';
+        document.getElementById('captureBtn').style.display = 'none';
+        canvas.style.display = 'block';
+
+        // Stop the camera
+        video.srcObject.getTracks().forEach(track => track.stop());
+    });
+</script>
+{% endblock %}

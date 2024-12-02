@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+{% load tz %}
+{% load custom_filters %}
+{% block main %}
+<div class="member-container">
+    <h2 class="member-title">Gym Members List</h2>
+    
+    <!-- Search and Status Filter Section -->
+    <div class="filter-container">
+        <div class="search-container">
+            <form method="get" action="{% url 'member_list' %}">
+                <input type="text" id="search-input" name="search" placeholder="Search members..." value="{{ search_query }}">
+                <button type="submit" class="search-btn">Search</button>
+            </form>
+        </div>
+        
+        <form method="get" action="{% url 'member_list' %}" class="status-toggle-form">
+            <button type="submit" name="active" value="True" class="toggle-status-btn">Active</button>
+            <button type="submit" name="active" value="False" class="toggle-status-btn">Non-Active</button>
+            <button type="submit" name="active" value="all" class="toggle-status-btn">All</button>
+        </form>
+    </div>
+
+    <!-- Member Table -->
+    <table class="member-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Attendance</th>
+                <th>Pending Fee</th>
+                <th>Activation Date</th>
+                <th>Profile Picture</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+            <tr>
+                <td>{{ member.membership_id }}</td>
+                <td><a href="{% url 'member_detail' member.id %}" class="member-link">{{ member.name }}</a></td>
+                <td>
+                    <a href="tel:{{ member.phone_number }}" class="member-link">{{ member.phone_number }}</a>
+                </td>
+                <td>
+                    {% if member.active_status %}
+                        {% if member.attendance_today %}
+                            <span class="status-present">Present</span>
+                        {% else %}
+                            <form method="post" action="{% url 'mark_attendance' member.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-action">Mark Present</button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        <form method="post" action="{% url 'activate_member' member.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-action active">Activate Member</button>
+                        </form>
+                    {% endif %}
+                </td>
+                
+                <td>{{ member.pending_fee|floatformat:2 }}</td>
+                <td class="{% if member.activation_date|date:'d'|to_int <= now|date:'d'|to_int and member.pending_fee != 0 %}past-due{% endif %}">
+                    {{ member.activation_date|date:"Y-m-d" }}
+                </td>
+                <td>
+                    <div class="profile-picture-container">
+                        
+                        {% if member.profile_picture %}
+                            <img src="{{ member.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+                        {% else %}
+                            <p></p>
+                        {% endif %}
+                    </div>
+                </td>
+                <td>
+                    <form method="post" action="{% url 'pay_fee' member.id %}">
+                        {% csrf_token %}
+                        <input type="number" name="amount" class="input-amount" placeholder="Amount" required>
+                        <button type="submit" class="btn-action">Pay Fee</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
