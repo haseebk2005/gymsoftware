@@ -74,10 +74,11 @@ def member_list(request):
         )
 
     # Order members by membership_id and name
-    members = members.order_by('membership_id', 'name')
+    members = members.order_by('membership_id')
 
     # Get the current date (without time)
     now = timezone.localdate()  # Use localdate() for just the date
+
     # Pass data to the template
     return render(request, 'totalmembers.html', {
         'members': members,
@@ -109,11 +110,19 @@ def member_detail(request, id):
     })
 
 
+from django.http import JsonResponse
+
 def mark_attendance(request, member_id):
-    member = GymMember.objects.get(id=member_id)
-    with transaction.atomic():
-        Attendance.objects.create(member=member, check_in_time=timezone.now())
-    return redirect('/totalmembers')
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        try:
+            member = GymMember.objects.get(id=member_id)
+            with transaction.atomic():
+                Attendance.objects.create(member=member, check_in_time=timezone.now())
+            return JsonResponse({'success': True, 'message': 'Attendance marked successfully.'})
+        except GymMember.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Member not found.'}, status=404)
+    return JsonResponse({'success': False, 'message': 'Invalid request.'}, status=400)
+
 
 
 def activate_member(request, member_id):
@@ -219,7 +228,7 @@ def pay_fee(request, member_id):
         payments_made = Payment.objects.filter(member=member).aggregate(total=Sum('amount'))['total'] or Decimal('0')
         pending_fee = member.total_membership_cost() - payments_made  # Calculate pending fee
 
-        return redirect('/totalmembers')  # Redirect after payment
+        return redirect('/totalmembers/?active=True')
 
     # Calculate pending fee for the template if needed
     payments_made = Payment.objects.filter(member=member).aggregate(total=Sum('amount'))['total'] or Decimal('0')

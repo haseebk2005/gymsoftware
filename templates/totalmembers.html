@@ -49,9 +49,9 @@
                         {% if member.attendance_today %}
                             <span class="status-present">Present</span>
                         {% else %}
-                            <form method="post" action="{% url 'mark_attendance' member.id %}">
+                            <form method="post" action="{% url 'mark_attendance' member.id %}" class="mark-attendance-form">
                                 {% csrf_token %}
-                                <button type="submit" class="btn-action">Mark Present</button>
+                                <button type="button" class="btn-action mark-present">Mark Present</button>
                             </form>
                         {% endif %}
                     {% else %}
@@ -68,7 +68,6 @@
                 </td>
                 <td>
                     <div class="profile-picture-container">
-                        
                         {% if member.profile_picture %}
                             <img src="{{ member.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
                         {% else %}
@@ -88,4 +87,66 @@
         </tbody>
     </table>
 </div>
+
+<!-- JavaScript for Marking Attendance -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.btn-action.mark-present');
+    
+        // Add click event listeners to all "Mark Present" buttons
+        buttons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent default form submission
+                
+                const form = this.closest('form');
+                const url = form.action; // Form action URL
+                const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value; // CSRF Token
+                
+                // AJAX request using Fetch API
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json(); // Parse JSON response
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Update the DOM on success
+                        const row = this.closest('tr');
+    
+                        // Check if the '.status-present' element exists
+                        let statusElement = row.querySelector('.status-present');
+                        if (!statusElement) {
+                            // If it doesn't exist, create it dynamically
+                            statusElement = document.createElement('span');
+                            statusElement.classList.add('status-present');
+                            const attendanceCell = row.cells[3]; // Assuming the 4th cell is for attendance
+                            attendanceCell.appendChild(statusElement);
+                        }
+    
+                        // Update the status text
+                        statusElement.textContent = 'Present';
+    
+                        // Remove the "Mark Present" form
+                        form.remove();
+                    } else {
+                        alert(data.message || 'Failed to mark attendance.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while marking attendance.');
+                });
+            });
+        });
+    });
+    
+</script>
 {% endblock %}

@@ -15,7 +15,7 @@ class GymMember(models.Model):
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
     # Gym Membership Details
-    membership_id = models.CharField(max_length=20, unique=True)
+    membership_id = models.IntegerField(unique=True)
     membership_type = models.CharField(max_length=50, choices=[
         ('single time', 'single time'),
         ('single time with electric machine', 'single time with electric machine'),
